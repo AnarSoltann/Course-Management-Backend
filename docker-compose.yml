@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  db:
+    container_name: course-management-db
+    image: postgres:14.5
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+    ports:
+      - '5432:5432'
+    volumes:
+      - ../../docker-volumes/course-management-db:/var/lib/postgresql/data
+#  redis:
+#    container_name: course-erp-redis
+#    image: 'bitnami/redis:latest'
+#    restart: always
+#    environment:
+#      - REDIS_PASSWORD=courseerpredis
+#    ports:
+#      - '6379:6379'
+#    volumes:
+#      - ../../docker-volumes/course-erp-redis:/bitnami/redis/data
