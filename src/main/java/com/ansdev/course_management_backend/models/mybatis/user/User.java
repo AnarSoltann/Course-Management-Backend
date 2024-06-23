@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 @Builder
+//Superbuilder
 @AllArgsConstructor
 @NoArgsConstructor
 public class User extends BaseEntity {
