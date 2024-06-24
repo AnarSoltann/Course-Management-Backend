@@ -38,13 +38,15 @@ public class CourseManagementBackendApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-
-		User user = User.builder().email("anar@gmail.com").build();
-		user.setId(1L);
-
-		String token = accessTokenManager.generate(user);
-
-		System.out.println(token);
+//
+//		User user = User.builder().email("anar@gmail.com").build();
+//		user.setId(1L);
+//
+//		String token = accessTokenManager.generate(user);
+//
+//		System.out.println(token);
+//
+//		System.out.println(accessTokenManager.read(token).get("email", String.class));
 
 	//	System.out.println(securityProperties);
 
