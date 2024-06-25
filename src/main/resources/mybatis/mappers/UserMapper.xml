@@ -7,4 +7,15 @@
         VALUES (#{name}, #{surname}, #{status}, #{roleId}, #{email}, #{phoneNumber}, #{password})
     </insert>
 
+
+    <select id="findByEmail"  resultType="User"  >
+        SELECT * FROM users u WHERE u.email = #{email} AND u.is_deleted=false
+    </select>
+
+
+
+
+
+
+
 </mapper>

@@ -5,12 +5,14 @@ import com.ansdev.course_management_backend.models.mybatis.user.User;
 import com.ansdev.course_management_backend.models.properties.security.SecurityProperties;
 import com.ansdev.course_management_backend.repository.UserRepository;
 import com.ansdev.course_management_backend.services.security.AccessTokenManager;
+import com.ansdev.course_management_backend.services.user.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -31,41 +33,30 @@ public class CourseManagementBackendApplication implements CommandLineRunner {
 	// private final SecurityProperties securityProperties;
 
 	private final AccessTokenManager accessTokenManager;
-
-
+	private final UserService userService;
+	private final PasswordEncoder passwordEncoder;
 
 
 	@Override
 	public void run(String... args) throws Exception {
 
+//		User user = User.builder()
+//				.name("TEST")
+//				.surname("test")
+//				.password(passwordEncoder.encode("123123"))
+//				.roleId(2L)
+//				.phoneNumber("123123123")
+//				.status(UserStatus.ACTIVE)
+//				.email("anar@gmail.com")
+//				.build();
 //
-//		User user = User.builder().email("anar@gmail.com").build();
-//		user.setId(1L);
+//		userService.insert(user);
 //
-//		String token = accessTokenManager.generate(user);
+//		System.out.println(userService.getByEmail("anar@gmail.com"));
 //
-//		System.out.println(token);
 //
-//		System.out.println(accessTokenManager.read(token).get("email", String.class));
-
-	//	System.out.println(securityProperties);
-
-//		KeyPairGenerator keyGenerator = KeyPairGenerator.getInstance("RSA");
-//		keyGenerator.initialize(2048);
-//		KeyPair kp = keyGenerator.genKeyPair();
-//		PublicKey publicKey = kp.getPublic();
-//		PrivateKey privateKey = kp.getPrivate();
 //
-//		String encodedPublicKey = Base64.getEncoder().encodeToString(publicKey.getEncoded());
-//		String encodedPrivateKey = Base64.getEncoder().encodeToString(privateKey.getEncoded());
-//
-//		System.out.println(convertToPublicKey(encodedPublicKey));
-//
-//		System.out.println();
-//
-//		System.out.println(convertToPrivateKey(encodedPrivateKey));
-
-	}
+}
 
 	private static String convertToPrivateKey(String key) {
 		StringBuilder result = new StringBuilder();

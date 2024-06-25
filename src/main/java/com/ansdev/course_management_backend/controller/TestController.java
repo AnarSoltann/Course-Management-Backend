@@ -2,6 +2,8 @@ package com.ansdev.course_management_backend.controller;
 
 import com.ansdev.course_management_backend.models.base.BaseResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,7 +13,18 @@ public class TestController {
 
     @GetMapping("/test")
     public BaseResponse<String> test() {
-        return BaseResponse.success("Hello World");
+
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return BaseResponse.success(userDetails.getUsername());
+
+
+    }
+
+
+    @GetMapping("/test/no-auth")
+    public BaseResponse<String> testNoAuth() {
+
+        return BaseResponse.success("No Auth");
 
 
     }
