@@ -6,6 +6,7 @@ import com.ansdev.course_management_backend.models.mybatis.user.User;
 import com.ansdev.course_management_backend.models.properties.security.SecurityProperties;
 import com.ansdev.course_management_backend.services.base.TokenGenerator;
 import com.ansdev.course_management_backend.services.base.TokenReader;
+import com.ansdev.course_management_backend.services.getters.EmailGetter;
 import com.ansdev.course_management_backend.utils.PublicPrivateKeyUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -16,10 +17,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+import static com.ansdev.course_management_backend.constants.TokenConstants.EMAIL_KEY;
+
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class RefreshTokenManager implements TokenGenerator<RefreshTokenDto>, TokenReader<Claims>{
+public class RefreshTokenManager implements TokenGenerator<RefreshTokenDto>, TokenReader<Claims>, EmailGetter {
 
 
     private final SecurityProperties securityProperties;
@@ -29,14 +32,13 @@ public class RefreshTokenManager implements TokenGenerator<RefreshTokenDto>, Tok
 
         final User user = obj.getUser();
 
-
-
             Claims claims = Jwts.claims();
             claims.put("email", user.getEmail());
             claims.put("type", "REFRESH_TOKEN");
 
             Date now = new Date();
-            Date validity = new Date(now.getTime() + securityProperties.getJwt().getRefreshTokenValidityTime(obj.isRememberMe()));
+            Date validity = new Date(now.getTime() + securityProperties.getJwt()
+                    .getRefreshTokenValidityTime(obj.isRememberMe()));
 
             return Jwts.builder()
                     .setSubject(String.valueOf(user.getId()))
@@ -49,10 +51,24 @@ public class RefreshTokenManager implements TokenGenerator<RefreshTokenDto>, Tok
 
     @Override
     public Claims read(String token) {
-        return Jwts.parserBuilder()
+
+        Claims tokenData = Jwts.parserBuilder()
                 .setSigningKey(PublicPrivateKeyUtils.getPublicKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+
+        String typeOfToken = tokenData.get("type", String.class);
+
+
+        if (!typeOfToken.equals("REFRESH_TOKEN")) {
+            throw new RuntimeException("Invalid token type");
+        }
+        return tokenData;
+    }
+
+    @Override
+    public String getEmail(String token) {
+        return read(token).get(EMAIL_KEY, String.class);
     }
 }
