@@ -3,6 +3,7 @@ package com.ansdev.course_management_backend.controller;
 import com.ansdev.course_management_backend.models.base.BaseResponse;
 import com.ansdev.course_management_backend.models.payload.auth.LoginPayload;
 import com.ansdev.course_management_backend.models.payload.auth.RefreshTokenPayload;
+import com.ansdev.course_management_backend.models.payload.auth.SignUpPayLoad;
 import com.ansdev.course_management_backend.models.response.auth.LoginResponse;
 import com.ansdev.course_management_backend.services.security.AuthBusinessService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +35,15 @@ public class AuthController {
         authBusinessService.logout();
         return BaseResponse.success();
     }
+
+
+    @PostMapping("/sign-up")
+    public BaseResponse<Void> signUp(@RequestBody SignUpPayLoad payload){
+      //  System.out.println(UserEntityMapper.INSTANCE.fromSignUpPayLoadToUser(payload,"123123",1L));
+        authBusinessService.signUp(payload);
+        return BaseResponse.success();
+    }
+
 
 
 

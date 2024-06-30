@@ -24,13 +24,13 @@ public class BaseException extends RuntimeException{
 
     //todo: fix. it doest return dynamic message
     @Override
-    public String getMessage() {
-        return responseMessage.message();
+    public String getMessage() {return responseMessage.message();}
+
+    public static BaseException of(ResponseMessages responseMessages){
+        return BaseException.builder().responseMessage(responseMessages).build();
     }
 
-    public  static BaseException unexpected(){
-       return BaseException.builder().responseMessage(UNEXPECTED).build();
-   }
+    public  static BaseException unexpected(){return of(UNEXPECTED);}
 
    public static BaseException notFound(String target, String field, String value){
        return BaseException.builder()

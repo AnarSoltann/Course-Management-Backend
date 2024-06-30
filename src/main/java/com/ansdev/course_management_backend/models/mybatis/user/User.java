@@ -9,17 +9,16 @@ import lombok.experimental.FieldDefaults;
 @EqualsAndHashCode(callSuper = true)
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 @Builder
-//Superbuilder
 @AllArgsConstructor
 @NoArgsConstructor
 public class User extends BaseEntity {
 
     String name;
     String surname;
-    UserStatus status;
-    Long roleId;
     String email;
     String phoneNumber;
+    UserStatus status;
+    Long roleId;
     String password;
 
 }

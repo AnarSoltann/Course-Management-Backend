@@ -1,12 +1,16 @@
 package com.ansdev.course_management_backend.services.security;
 
+import com.ansdev.course_management_backend.exception.BaseException;
 import com.ansdev.course_management_backend.models.dto.RefreshTokenDto;
+import com.ansdev.course_management_backend.models.mappers.UserEntityMapper;
+import com.ansdev.course_management_backend.models.mybatis.role.Role;
 import com.ansdev.course_management_backend.models.mybatis.user.User;
 import com.ansdev.course_management_backend.models.payload.auth.LoginPayload;
 import com.ansdev.course_management_backend.models.payload.auth.RefreshTokenPayload;
+import com.ansdev.course_management_backend.models.payload.auth.SignUpPayLoad;
 import com.ansdev.course_management_backend.models.response.auth.LoginResponse;
+import com.ansdev.course_management_backend.services.role.RoleService;
 import com.ansdev.course_management_backend.services.user.UserService;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +19,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import static com.ansdev.course_management_backend.models.enums.response.ErrorResponseMessages.EMAIL_ALREADY_REGISTERED;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +33,9 @@ public class AuthBusinessServiceImpl implements AuthBusinessService{
     private final RefreshTokenManager refreshTokenManager;
     private final UserService userService;
     private final UserDetailsService userDetailsService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final RoleService roleService;
+
 
     @Override
     public LoginResponse login(LoginPayload payload) {
@@ -40,6 +50,24 @@ public class AuthBusinessServiceImpl implements AuthBusinessService{
     }
 
     @Override
+    public void signUp(SignUpPayLoad payload) {
+        if (userService.checkByEmail(payload.getEmail())){
+            throw BaseException.of(EMAIL_ALREADY_REGISTERED);
+        }
+
+        Role defaultRole = roleService.getDefaultRole();
+
+        User user = UserEntityMapper.INSTANCE.fromSignUpPayLoadToUser(
+                payload,
+                bCryptPasswordEncoder.encode(payload.getPassword()),
+                defaultRole.getId());
+
+        userService.insert(user);
+
+
+    }
+
+    @Override
     public void logout() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info(" {} User logged out", userDetails.getUsername());
@@ -48,7 +76,9 @@ public class AuthBusinessServiceImpl implements AuthBusinessService{
     @Override
     public void setAuthentication(String email) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities()));
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities())
+        );
 
     }
 
