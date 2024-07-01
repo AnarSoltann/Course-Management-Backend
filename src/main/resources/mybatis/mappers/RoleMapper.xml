@@ -13,7 +13,12 @@
     </select>
 
 
-
+    <sql id="roleBaseColumns">
+        r.id,
+        r.name,
+        r.description,
+        r.is_deleted
+    </sql>
 
 
 

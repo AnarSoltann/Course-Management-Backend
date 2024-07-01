@@ -2,13 +2,19 @@ package com.ansdev.course_management_backend.services.security;
 
 import com.ansdev.course_management_backend.exception.BaseException;
 import com.ansdev.course_management_backend.models.dto.RefreshTokenDto;
+import com.ansdev.course_management_backend.models.enums.branch.BranchStatus;
+import com.ansdev.course_management_backend.models.mappers.CourseEntityMapper;
 import com.ansdev.course_management_backend.models.mappers.UserEntityMapper;
+import com.ansdev.course_management_backend.models.mybatis.branch.Branch;
+import com.ansdev.course_management_backend.models.mybatis.course.Course;
 import com.ansdev.course_management_backend.models.mybatis.role.Role;
 import com.ansdev.course_management_backend.models.mybatis.user.User;
 import com.ansdev.course_management_backend.models.payload.auth.LoginPayload;
 import com.ansdev.course_management_backend.models.payload.auth.RefreshTokenPayload;
 import com.ansdev.course_management_backend.models.payload.auth.SignUpPayLoad;
 import com.ansdev.course_management_backend.models.response.auth.LoginResponse;
+import com.ansdev.course_management_backend.services.branch.BranchService;
+import com.ansdev.course_management_backend.services.course.CourseService;
 import com.ansdev.course_management_backend.services.role.RoleService;
 import com.ansdev.course_management_backend.services.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +34,8 @@ import static com.ansdev.course_management_backend.models.enums.response.ErrorRe
 @RequiredArgsConstructor
 @Slf4j
 public class AuthBusinessServiceImpl implements AuthBusinessService{
+    private final static String BRANCH_NAME_DEFAULT_PATTERN = "%s Default Branch";
+
     private final AuthenticationManager authenticationManager;
     private final AccessTokenManager accessTokenManager;
     private final RefreshTokenManager refreshTokenManager;
@@ -35,6 +43,10 @@ public class AuthBusinessServiceImpl implements AuthBusinessService{
     private final UserDetailsService userDetailsService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RoleService roleService;
+    private final CourseService courseService;
+    private final BranchService branchService;
+
+
 
 
     @Override
@@ -56,13 +68,22 @@ public class AuthBusinessServiceImpl implements AuthBusinessService{
         }
 
         Role defaultRole = roleService.getDefaultRole();
-
+    // Stage 1: Insert user
         User user = UserEntityMapper.INSTANCE.fromSignUpPayLoadToUser(
                 payload,
                 bCryptPasswordEncoder.encode(payload.getPassword()),
                 defaultRole.getId());
-
         userService.insert(user);
+
+    // Stage 2: Insert course
+        Course course = CourseEntityMapper.INSTANCE.fromSignUpPayLoad(payload);
+        courseService.insert(course);
+
+    // Stage 3: Insert default branch
+
+        Branch branch = populateDefaultBranch(payload,course);
+        branchService.insert(branch);
+
 
 
     }
@@ -103,6 +124,16 @@ public class AuthBusinessServiceImpl implements AuthBusinessService{
                         .user(user)
                         .rememberMe(rememberMe)
                         .build()))
+                .build();
+    }
+
+    private Branch populateDefaultBranch(SignUpPayLoad payload,Course course){
+        //todo: customize field setters
+        return Branch.builder()
+                .name(BRANCH_NAME_DEFAULT_PATTERN.formatted(payload.getCourseName()))
+                .status(BranchStatus.ACTIVE)
+                .address(payload.getAddress())
+                .courseId(course.getId())
                 .build();
     }
 }

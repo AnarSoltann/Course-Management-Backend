@@ -1,7 +1,9 @@
 package com.ansdev.course_management_backend;
 
 import com.ansdev.course_management_backend.models.enums.user.UserStatus;
+import com.ansdev.course_management_backend.models.mappers.CourseEntityMapper;
 import com.ansdev.course_management_backend.models.mybatis.user.User;
+import com.ansdev.course_management_backend.models.payload.auth.SignUpPayLoad;
 import com.ansdev.course_management_backend.models.properties.security.SecurityProperties;
 import com.ansdev.course_management_backend.repository.UserRepository;
 import com.ansdev.course_management_backend.services.security.AccessTokenManager;
@@ -39,6 +41,9 @@ public class CourseManagementBackendApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+
+
+
 
 //		User user = User.builder()
 //				.name("TEST")
