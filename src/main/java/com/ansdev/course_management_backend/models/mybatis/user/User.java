@@ -21,4 +21,8 @@ public class User extends BaseEntity {
     Long roleId;
     String password;
 
+    public boolean IsActive() {
+        return UserStatus.ACTIVE.equals(status);
+    }
+
 }

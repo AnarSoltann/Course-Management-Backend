@@ -1,19 +1,19 @@
 package com.ansdev.course_management_backend.models.enums.response;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
-
 @AllArgsConstructor
-@FieldDefaults(makeFinal = true, level = lombok.AccessLevel.PRIVATE)
-public enum SuccesResponseMessages implements ResponseMessages{
-
-    SUCCESS("success", "SUCCESS", HttpStatus.OK);
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public enum SuccessResponseMessages implements ResponseMessages {
+    SUCCESS("success", "Successfully", HttpStatus.OK),
+    CREATED("created", "Successfully created", HttpStatus.CREATED);
 
     String key;
     String message;
     HttpStatus status;
-
+    ;
 
 
     @Override
@@ -30,4 +30,5 @@ public enum SuccesResponseMessages implements ResponseMessages{
     public HttpStatus status() {
         return status;
     }
+
 }

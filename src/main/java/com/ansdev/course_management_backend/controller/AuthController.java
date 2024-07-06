@@ -1,9 +1,7 @@
 package com.ansdev.course_management_backend.controller;
 
 import com.ansdev.course_management_backend.models.base.BaseResponse;
-import com.ansdev.course_management_backend.models.payload.auth.LoginPayload;
-import com.ansdev.course_management_backend.models.payload.auth.RefreshTokenPayload;
-import com.ansdev.course_management_backend.models.payload.auth.SignUpPayLoad;
+import com.ansdev.course_management_backend.models.payload.auth.*;
 import com.ansdev.course_management_backend.models.response.auth.LoginResponse;
 import com.ansdev.course_management_backend.services.security.AuthBusinessService;
 import lombok.RequiredArgsConstructor;
@@ -38,9 +36,20 @@ public class AuthController {
 
 
     @PostMapping("/sign-up")
-    public BaseResponse<Void> signUp(@RequestBody SignUpPayLoad payload){
-      //  System.out.println(UserEntityMapper.INSTANCE.fromSignUpPayLoadToUser(payload,"123123",1L));
+    public BaseResponse<Void> signUp(@RequestBody SignUpPayload payload){
         authBusinessService.signUp(payload);
+        return BaseResponse.success();
+    }
+
+    @PostMapping("/sign-up/otp/request")
+    public BaseResponse<Void> otpRequest(@RequestBody SignUpOTPChannelRequest payload) {
+        authBusinessService.signUpOTP(payload);
+        return BaseResponse.success();
+    }
+
+    @PostMapping("/sign-up/otp/confirmation")
+    public BaseResponse<Void> otpConfirmation(@RequestBody SignUpOTPRequest payload) {
+        authBusinessService.signUpOTPConfirmation(payload);
         return BaseResponse.success();
     }
 

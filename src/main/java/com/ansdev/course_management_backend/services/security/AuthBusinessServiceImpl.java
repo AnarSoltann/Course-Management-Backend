@@ -3,18 +3,20 @@ package com.ansdev.course_management_backend.services.security;
 import com.ansdev.course_management_backend.exception.BaseException;
 import com.ansdev.course_management_backend.models.dto.RefreshTokenDto;
 import com.ansdev.course_management_backend.models.enums.branch.BranchStatus;
+import com.ansdev.course_management_backend.models.enums.user.UserStatus;
 import com.ansdev.course_management_backend.models.mappers.CourseEntityMapper;
 import com.ansdev.course_management_backend.models.mappers.UserEntityMapper;
 import com.ansdev.course_management_backend.models.mybatis.branch.Branch;
 import com.ansdev.course_management_backend.models.mybatis.course.Course;
+import com.ansdev.course_management_backend.models.mybatis.employee.Employee;
 import com.ansdev.course_management_backend.models.mybatis.role.Role;
 import com.ansdev.course_management_backend.models.mybatis.user.User;
-import com.ansdev.course_management_backend.models.payload.auth.LoginPayload;
-import com.ansdev.course_management_backend.models.payload.auth.RefreshTokenPayload;
-import com.ansdev.course_management_backend.models.payload.auth.SignUpPayLoad;
+import com.ansdev.course_management_backend.models.payload.auth.*;
 import com.ansdev.course_management_backend.models.response.auth.LoginResponse;
 import com.ansdev.course_management_backend.services.branch.BranchService;
 import com.ansdev.course_management_backend.services.course.CourseService;
+import com.ansdev.course_management_backend.services.employee.EmployeeService;
+import com.ansdev.course_management_backend.services.otp.OTPFactory;
 import com.ansdev.course_management_backend.services.role.RoleService;
 import com.ansdev.course_management_backend.services.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +47,7 @@ public class AuthBusinessServiceImpl implements AuthBusinessService{
     private final RoleService roleService;
     private final CourseService courseService;
     private final BranchService branchService;
+    private final EmployeeService employeeService;
 
 
 
@@ -62,7 +65,7 @@ public class AuthBusinessServiceImpl implements AuthBusinessService{
     }
 
     @Override
-    public void signUp(SignUpPayLoad payload) {
+    public void signUp(SignUpPayload payload) {
         if (userService.checkByEmail(payload.getEmail())){
             throw BaseException.of(EMAIL_ALREADY_REGISTERED);
         }
@@ -76,14 +79,15 @@ public class AuthBusinessServiceImpl implements AuthBusinessService{
         userService.insert(user);
 
     // Stage 2: Insert course
-        Course course = CourseEntityMapper.INSTANCE.fromSignUpPayLoad(payload);
+        Course course = CourseEntityMapper.INSTANCE.fromSignUpPayload(payload);
         courseService.insert(course);
 
     // Stage 3: Insert default branch
-
-        Branch branch = populateDefaultBranch(payload,course);
-        branchService.insert(branch);
-
+        branchService.insert(populateDefaultBranch(payload,course));
+    // Stage 4: Employee insert
+        employeeService.insert(Employee.builder()
+                .userId(user.getId())
+                .build());
 
 
     }
@@ -92,6 +96,25 @@ public class AuthBusinessServiceImpl implements AuthBusinessService{
     public void logout() {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         log.info(" {} User logged out", userDetails.getUsername());
+    }
+
+    @Override
+    public void signUpOTP(SignUpOTPChannelRequest payload) {
+        User user = userService.getById(otpProceedTokenManager.getId(payload.getProceedKey()));
+        OTPFactory.handle(payload.getChannel()).send(
+                SendOTPDto.of(payload.getChannel().getTarget(user), String.format(OTPConstants.SIGN_UP, user.getId()))
+        );
+    }
+
+    @Override
+    public void signUpOTPConfirmation(SignUpOTPRequest payload) {
+        User user = userService.getById(otpProceedTokenManager.getId(payload.getProceedKey()));
+        final String otp = redisService.get(String.format(OTPConstants.SIGN_UP, user.getId()));
+        if (payload.getOtp().equals(otp)) {
+            user.setStatus(UserStatus.ACTIVE);
+            userService.update(user);
+            log.info("User confirmed!");
+        }
     }
 
     @Override
@@ -111,8 +134,7 @@ public class AuthBusinessServiceImpl implements AuthBusinessService{
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(),
                 request.getPassword()));
             }catch (AuthenticationException e){
-                //todo: Implement custom exception
-                throw new RuntimeException("Invalid email/password supplied");
+                throw e.getCause() instanceof BaseException ? (BaseException) e.getCause() : BaseException.unexpected();
             }
     }
 
@@ -127,7 +149,7 @@ public class AuthBusinessServiceImpl implements AuthBusinessService{
                 .build();
     }
 
-    private Branch populateDefaultBranch(SignUpPayLoad payload,Course course){
+    private Branch populateDefaultBranch(SignUpPayload payload,Course course){
         //todo: customize field setters
         return Branch.builder()
                 .name(BRANCH_NAME_DEFAULT_PATTERN.formatted(payload.getCourseName()))

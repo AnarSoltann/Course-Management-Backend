@@ -1,6 +1,5 @@
 package com.ansdev.course_management_backend.controller;
 
-import com.ansdev.course_management_backend.exception.BaseException;
 import com.ansdev.course_management_backend.models.base.BaseResponse;
 import com.ansdev.course_management_backend.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +23,7 @@ public class TestController {
 
     @GetMapping("/test/no-auth")
     public BaseResponse<String> testNoAuth() {
-
-       userService.getByEmail("dsalkdas@gmail.com");
         return BaseResponse.success("No Auth");
-   //     return BaseResponse.success("No Auth");
     }
 
 }

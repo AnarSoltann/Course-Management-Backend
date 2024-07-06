@@ -1,7 +1,8 @@
+
 package com.ansdev.course_management_backend.models.mappers;
 
 import com.ansdev.course_management_backend.models.mybatis.course.Course;
-import com.ansdev.course_management_backend.models.payload.auth.SignUpPayLoad;
+import com.ansdev.course_management_backend.models.payload.auth.SignUpPayload;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -13,6 +14,6 @@ public interface CourseEntityMapper {
 
     @Mapping(target = "name",source = "courseName")
     @Mapping(target = "status",constant = "ACTIVE")
-    Course fromSignUpPayLoad(SignUpPayLoad signUpPayLoad);
+    Course fromSignUpPayload(SignUpPayload signUpPayLoad);
 
 }

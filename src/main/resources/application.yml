@@ -12,3 +12,5 @@ mybatis:
   type-aliases-package: com.ansdev.course_management_backend.models.mybatis
 
 
+server:
+    port: 8081

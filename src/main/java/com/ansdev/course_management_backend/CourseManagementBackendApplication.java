@@ -1,26 +1,12 @@
 package com.ansdev.course_management_backend;
 
-import com.ansdev.course_management_backend.models.enums.user.UserStatus;
-import com.ansdev.course_management_backend.models.mappers.CourseEntityMapper;
-import com.ansdev.course_management_backend.models.mybatis.user.User;
-import com.ansdev.course_management_backend.models.payload.auth.SignUpPayLoad;
-import com.ansdev.course_management_backend.models.properties.security.SecurityProperties;
-import com.ansdev.course_management_backend.repository.UserRepository;
 import com.ansdev.course_management_backend.services.security.AccessTokenManager;
 import com.ansdev.course_management_backend.services.user.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.util.Base64;
 
 @SpringBootApplication
 @RequiredArgsConstructor
