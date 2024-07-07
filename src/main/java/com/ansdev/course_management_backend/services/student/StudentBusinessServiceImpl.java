@@ -15,7 +15,10 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import static com.ansdev.course_management_backend.models.enums.response.ErrorResponseMessages.PHONE_NUMBER_ALREADY_EXIST;
+import static com.ansdev.course_management_backend.models.enums.response.ErrorResponseMessages.STUDENT_ALREADY_ADDED_TO_GROUP;
+import static com.ansdev.course_management_backend.utils.CommonUtils.throwIf;
 
 @Service
 @Slf4j

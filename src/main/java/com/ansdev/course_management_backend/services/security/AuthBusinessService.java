@@ -1,6 +1,8 @@
 package com.ansdev.course_management_backend.services.security;
 
-import com.ansdev.course_management_backend.models.payload.auth.*;
+import com.ansdev.course_management_backend.models.common.proceedkey.ProceedKey;
+import com.ansdev.course_management_backend.models.payload.auth.LoginPayload;
+import com.ansdev.course_management_backend.models.payload.auth.RefreshTokenPayload;
 import com.ansdev.course_management_backend.models.payload.auth.signup.SignUpOTPChannelRequest;
 import com.ansdev.course_management_backend.models.payload.auth.signup.SignUpOTPRequest;
 import com.ansdev.course_management_backend.models.payload.auth.signup.SignUpPayload;
@@ -10,11 +12,11 @@ public interface AuthBusinessService {
 
     LoginResponse login(LoginPayload payload);
 
-    LoginResponse refreshToken(RefreshTokenPayload payload);
-
-    void signUp(SignUpPayload payload);
+    LoginResponse refresh(RefreshTokenPayload payload);
 
     void logout();
+
+    ProceedKey signUp(SignUpPayload payload);
 
     void signUpOTP(SignUpOTPChannelRequest payload);
 

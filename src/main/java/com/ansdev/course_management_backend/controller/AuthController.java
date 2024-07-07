@@ -1,7 +1,9 @@
 package com.ansdev.course_management_backend.controller;
 
 import com.ansdev.course_management_backend.models.base.BaseResponse;
-import com.ansdev.course_management_backend.models.payload.auth.*;
+import com.ansdev.course_management_backend.models.common.proceedkey.ProceedKey;
+import com.ansdev.course_management_backend.models.payload.auth.LoginPayload;
+import com.ansdev.course_management_backend.models.payload.auth.RefreshTokenPayload;
 import com.ansdev.course_management_backend.models.payload.auth.signup.SignUpOTPChannelRequest;
 import com.ansdev.course_management_backend.models.payload.auth.signup.SignUpOTPRequest;
 import com.ansdev.course_management_backend.models.payload.auth.signup.SignUpPayload;
@@ -18,17 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
-
     private final AuthBusinessService authBusinessService;
 
     @PostMapping("/login")
-    public BaseResponse<LoginResponse>login(@RequestBody LoginPayload payload){
+    public BaseResponse<LoginResponse> login(@RequestBody LoginPayload payload) {
         return BaseResponse.success(authBusinessService.login(payload));
     }
 
     @PostMapping("/token/refresh")
-    public BaseResponse<LoginResponse> refreshToken(@RequestBody RefreshTokenPayload payload) {
-        return BaseResponse.success(authBusinessService.refreshToken(payload));
+    public BaseResponse<LoginResponse> refresh(@RequestBody RefreshTokenPayload payload) {
+        return BaseResponse.success(authBusinessService.refresh(payload));
     }
 
     @PostMapping("/logout")
@@ -37,13 +38,12 @@ public class AuthController {
         return BaseResponse.success();
     }
 
-
     @PostMapping("/sign-up")
-    public BaseResponse<Void> signUp(@RequestBody SignUpPayload payload){
-        authBusinessService.signUp(payload);
-        return BaseResponse.success();
+    public BaseResponse<ProceedKey> signUp(@RequestBody SignUpPayload payload) {
+        return BaseResponse.success(authBusinessService.signUp(payload));
     }
 
+    // use proceedKey
     @PostMapping("/sign-up/otp/request")
     public BaseResponse<Void> otpRequest(@RequestBody SignUpOTPChannelRequest payload) {
         authBusinessService.signUpOTP(payload);
@@ -55,4 +55,5 @@ public class AuthController {
         authBusinessService.signUpOTPConfirmation(payload);
         return BaseResponse.success();
     }
+
 }

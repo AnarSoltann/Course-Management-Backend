@@ -14,7 +14,8 @@ import com.ansdev.course_management_backend.models.mybatis.course.Course;
 import com.ansdev.course_management_backend.models.mybatis.employee.Employee;
 import com.ansdev.course_management_backend.models.mybatis.role.Role;
 import com.ansdev.course_management_backend.models.mybatis.user.User;
-import com.ansdev.course_management_backend.models.payload.auth.*;
+import com.ansdev.course_management_backend.models.payload.auth.LoginPayload;
+import com.ansdev.course_management_backend.models.payload.auth.RefreshTokenPayload;
 import com.ansdev.course_management_backend.models.payload.auth.signup.SignUpOTPChannelRequest;
 import com.ansdev.course_management_backend.models.payload.auth.signup.SignUpOTPRequest;
 import com.ansdev.course_management_backend.models.payload.auth.signup.SignUpPayload;
@@ -68,7 +69,6 @@ public class AuthBusinessServiceImpl implements AuthBusinessService {
     public LoginResponse login(LoginPayload payload) {
 
         authenticate(payload);
-
         return prepareLoginResponse(payload.getEmail(), payload.isRememberMe());
     }
 
@@ -92,43 +92,23 @@ public class AuthBusinessServiceImpl implements AuthBusinessService {
         throwIf(()-> userService.checkByEmail(payload.getEmail()), BaseException.of(EMAIL_ALREADY_REGISTERED));
 
         Role defaultRole = roleService.getDefaultRole();
-
-        // Stage 1: User insert
-        User user = UserEntityMapper.INSTANCE.fromSignUpPayLoadToUser(
+        User user = UserEntityMapper.INSTANCE.fromSignUpPayloadToUser(
                 payload,
                 passwordEncoder.encode(payload.getPassword()),
                 defaultRole.getId()
         );
         userService.insert(user);
-
-        // Stage 2: Course insert
         Course course = CourseEntityMapper.INSTANCE.fromSignUpPayload(payload);
         courseService.insert(course);
-
-        // Stage 3: Default branch insert
         branchService.insert(populateDefaultBranchData(payload, course));
-
-        // Stage 4: Employee insert
         employeeService.insert(Employee.builder().userId(user.getId()).build());
-
-        /*
-        1. course insert +
-        2. default branch insert +
-        3. employee insert - refactor +
-        3.1 employee-branch relation +
-        4. sending otp (email) +
-        5. verification otp +
-        6. login - if user is not confirmed, can't login system
-         */
         return ProceedKey.builder().proceedKey(otpProceedTokenManager.generate(user)).build();
     }
 
     @Override
     public void signUpOTP(SignUpOTPChannelRequest payload) {
-        // TODO: OTP processing
         User user = userService.getById(otpProceedTokenManager.getId(payload.getProceedKey()));
-        OTPFactory.handle(payload.getChannel()).send(
-                SendOTPDto.of(payload.getChannel().getTarget(user), String.format(OTPConstants.SIGN_UP, user.getId()))
+        OTPFactory.handle(payload.getChannel()).send(SendOTPDto.of(payload.getChannel().getTarget(user), String.format(OTPConstants.SIGN_UP, user.getId()))
         );
     }
 

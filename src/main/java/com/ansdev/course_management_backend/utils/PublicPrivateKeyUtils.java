@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -30,7 +31,6 @@ public class PublicPrivateKeyUtils {
         privateKey = preparePrivateKey();
         publicKey = preparePublicKey();
     }
-
 
     private PrivateKey preparePrivateKey() {
         try {

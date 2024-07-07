@@ -4,6 +4,9 @@ spring:
     username: postgres
     password: 1234
 
+  redis:
+    redisson:
+      file: classpath:redisson.yml
 
 security:
   jwt:
@@ -12,6 +15,7 @@ security:
     access-token-validity-time: 1800000
     refresh-token-validity-time: 86400000
 
-
-server :
-  port : 8081
+otp:
+  jwt:
+    secret-key: 12ab7fc55a99b439e2c9ede549e8770695358a549a39938aa737b2b8afdd11d945d0512c5aff957e330cc42441f307f0669145507ec93386c73f16781ebe5f62
+  validity-time: 300000 # 5 minutes
