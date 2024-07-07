@@ -1,6 +1,5 @@
 package com.ansdev.course_management_backend.models.response.auth;
 
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,27 +10,21 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginResponse {
 
-   String accessToken;
-   String refreshToken;
+    String accessToken;
+    String refreshToken;
     UserInfo userInfo;
-
 
     @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     @FieldDefaults(level = AccessLevel.PRIVATE)
-   public static class UserInfo {
+    public static class UserInfo {
 
+        Long id;
+        String name;
+        String surname;
+        String imageUrl;
 
-      Long id;
-      String name;
-      String surname;
-      String imageUrl;
-
-
-   }
-
-
-
+    }
 }

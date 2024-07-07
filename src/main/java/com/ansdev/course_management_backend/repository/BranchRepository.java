@@ -7,4 +7,5 @@ import org.apache.ibatis.annotations.Mapper;
 public interface BranchRepository {
 
     void insert(Branch branch);
+
 }

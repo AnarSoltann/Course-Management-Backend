@@ -1,6 +1,5 @@
 package com.ansdev.course_management_backend.models.base;
 
-
 import com.ansdev.course_management_backend.exception.BaseException;
 import com.ansdev.course_management_backend.exception.types.NotFoundExceptionType;
 import com.ansdev.course_management_backend.models.enums.response.ResponseMessages;

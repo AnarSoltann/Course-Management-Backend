@@ -15,20 +15,13 @@ public enum SuccessResponseMessages implements ResponseMessages {
     HttpStatus status;
     ;
 
+    @Override
+    public String key() {return key;}
 
     @Override
-    public String key() {
-        return key;
-    }
+    public String message() {return message;}
 
     @Override
-    public String message() {
-        return message;
-    }
-
-    @Override
-    public HttpStatus status() {
-        return status;
-    }
+    public HttpStatus status() {return status;}
 
 }

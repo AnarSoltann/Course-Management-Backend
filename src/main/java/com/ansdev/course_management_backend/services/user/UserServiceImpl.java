@@ -15,7 +15,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public void insert(User user) {userRepository.insert(user);}
+    public void insert(User user) {
+        userRepository.insert(user);
+    }
+
+    @Override
+    public void update(User user) {
+        userRepository.update(user);
+    }
 
     @Override
     public User getByEmail(String email) {
@@ -25,7 +32,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getById(Long id) {
+        return userRepository.findById(id).orElseThrow(
+                () -> BaseException.notFound(User.class.getSimpleName(), "id", id)
+        );
+    }
+
+    @Override
     public boolean checkByEmail(String email) {
         return userRepository.findByEmail(email).isPresent();
+    }
+
+    @Override
+    public boolean checkByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber).isPresent();
     }
 }

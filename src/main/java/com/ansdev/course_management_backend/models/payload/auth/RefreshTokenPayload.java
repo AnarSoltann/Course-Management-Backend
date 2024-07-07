@@ -16,5 +16,4 @@ public class RefreshTokenPayload {
     String refreshToken;
     boolean rememberMe;
 
-
 }

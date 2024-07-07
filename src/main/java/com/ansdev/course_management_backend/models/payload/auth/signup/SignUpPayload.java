@@ -1,4 +1,4 @@
-package com.ansdev.course_management_backend.models.payload.auth;
+package com.ansdev.course_management_backend.models.payload.auth.signup;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

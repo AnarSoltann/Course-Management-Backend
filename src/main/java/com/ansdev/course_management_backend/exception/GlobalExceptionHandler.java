@@ -15,14 +15,4 @@ public class GlobalExceptionHandler  {
         return ResponseEntity.status(e.getResponseMessage().status()).body(BaseResponse.error(e));
 
     }
-
-//    @ExceptionHandler(UsernameNotFoundException.class)
-//   public ResponseEntity<BaseResponse<?>> handleUsernameNotFoundException(UsernameNotFoundException ex) {
-//        BaseException baseException = (BaseException) ex.getCause();
-//       return ResponseEntity.status(baseException.getResponseMessage().status()).body(BaseResponse.error(baseException));
-//   }
-
-
-
-
 }

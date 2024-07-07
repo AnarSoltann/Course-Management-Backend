@@ -7,7 +7,7 @@ import lombok.experimental.FieldDefaults;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JwtData {
+public class SecurityJwtData  {
 
     String publicKey;
     String privateKey;
@@ -18,7 +18,5 @@ public class JwtData {
     public Long getRefreshTokenValidityTime(boolean rememberMe) {
         return refreshTokenValidityTime * (rememberMe ? 30L : 1L);
     }
-
-
 
 }

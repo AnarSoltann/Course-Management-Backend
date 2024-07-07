@@ -2,6 +2,9 @@ package com.ansdev.course_management_backend.controller;
 
 import com.ansdev.course_management_backend.models.base.BaseResponse;
 import com.ansdev.course_management_backend.models.payload.auth.*;
+import com.ansdev.course_management_backend.models.payload.auth.signup.SignUpOTPChannelRequest;
+import com.ansdev.course_management_backend.models.payload.auth.signup.SignUpOTPRequest;
+import com.ansdev.course_management_backend.models.payload.auth.signup.SignUpPayload;
 import com.ansdev.course_management_backend.models.response.auth.LoginResponse;
 import com.ansdev.course_management_backend.services.security.AuthBusinessService;
 import lombok.RequiredArgsConstructor;
@@ -52,12 +55,4 @@ public class AuthController {
         authBusinessService.signUpOTPConfirmation(payload);
         return BaseResponse.success();
     }
-
-
-
-
-
-
-
-
 }

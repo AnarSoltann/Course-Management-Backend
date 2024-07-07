@@ -5,24 +5,27 @@ import com.ansdev.course_management_backend.models.mybatis.base.BaseEntity;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import lombok.experimental.SuperBuilder;
+
 @Data
-@EqualsAndHashCode(callSuper = true)
-@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-@Builder
-@AllArgsConstructor
+@SuperBuilder
 @NoArgsConstructor
-public class User extends BaseEntity {
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class User extends BaseEntity<Long> {
 
     String name;
     String surname;
-    String email;
-    String phoneNumber;
     UserStatus status;
     Long roleId;
+    String email;
+    String phoneNumber;
     String password;
 
-    public boolean IsActive() {
+    public boolean isActive() {
         return UserStatus.ACTIVE.equals(status);
     }
-
 }

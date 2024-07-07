@@ -58,7 +58,6 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                    AuthorizationFilter authorizationFilter,
@@ -103,10 +102,4 @@ public class SecurityConfig {
             resolver.resolveException(request, response, null, BaseException.of(ErrorResponseMessages.FORBIDDEN));
         }
     }
-
-
-
-
-
-
 }

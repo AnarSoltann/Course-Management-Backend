@@ -14,12 +14,9 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class LoginPayload {
 
-
     //TODO: add validation
     String email;
     String password;
     boolean rememberMe;
-
-
 
 }

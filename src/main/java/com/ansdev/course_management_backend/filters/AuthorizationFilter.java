@@ -47,7 +47,6 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         } catch (Exception ex) {
             log.error("An unexpected error occurred during authorization filtering", ex);
         }
-
         filterChain.doFilter(request, response);
     }
 }

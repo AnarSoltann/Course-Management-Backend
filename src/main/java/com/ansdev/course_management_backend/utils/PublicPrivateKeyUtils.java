@@ -2,6 +2,8 @@ package com.ansdev.course_management_backend.utils;
 
 import com.ansdev.course_management_backend.models.properties.security.SecurityProperties;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -14,6 +16,7 @@ import java.util.Base64;
 
 @Component
 public class PublicPrivateKeyUtils {
+    private static final Logger logger = LoggerFactory.getLogger(PublicPrivateKeyUtils.class);
 
     private final SecurityProperties securityProperties;
 
@@ -35,7 +38,7 @@ public class PublicPrivateKeyUtils {
             PKCS8EncodedKeySpec keySpecPKCS8 = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(securityProperties.getJwt().getPrivateKey()));
             return kf.generatePrivate(keySpecPKCS8);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            e.printStackTrace();
+            logger.error("Error preparing private key", e);
         }
         return null;
     }
@@ -46,7 +49,7 @@ public class PublicPrivateKeyUtils {
             X509EncodedKeySpec keySpecX509 = new X509EncodedKeySpec(Base64.getDecoder().decode(securityProperties.getJwt().getPublicKey()));
             return kf.generatePublic(keySpecX509);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            e.printStackTrace();
+            logger.error("Error preparing public key", e);
         }
         return null;
     }
