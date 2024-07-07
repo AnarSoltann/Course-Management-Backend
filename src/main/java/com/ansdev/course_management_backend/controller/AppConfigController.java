@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/appconfig")
+@RequestMapping("/v1/app-config")
 @RequiredArgsConstructor
 public class AppConfigController {
 
